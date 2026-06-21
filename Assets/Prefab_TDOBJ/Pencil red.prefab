@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &7764473047129343994
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7836480736639782054}
+  m_Layer: 0
+  m_Name: Pencil_red_Firepoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7836480736639782054
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7764473047129343994}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -1, z: -0, w: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0.1}
+  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1893652512579005744}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1893652512578877360
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -30,15 +61,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 55671bcf5267244a1a590ffb6bc77964, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -4.445
+      value: -3.5748491
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 55671bcf5267244a1a590ffb6bc77964, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.96
+      value: 0.9490371
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 55671bcf5267244a1a590ffb6bc77964, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 1.92
+      value: 1.7927195
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 55671bcf5267244a1a590ffb6bc77964, type: 3}
       propertyPath: m_LocalRotation.w
@@ -70,7 +101,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 400000, guid: 55671bcf5267244a1a590ffb6bc77964, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7836480736639782054}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 100000, guid: 55671bcf5267244a1a590ffb6bc77964, type: 3}
       insertIndex: -1
@@ -93,8 +127,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58f416624b1961447a6e70d777acf3dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  range: 5
+  range: 1
   fireRate: 1
+  projectilePrefab: {fileID: 4770631532876678271, guid: d97e483389ef7bd40ae11d1855fecd44, type: 3}
+  firePoint: {fileID: 7836480736639782054}
   partToRotate: {fileID: 1893652512579005744}
   turnSpeed: 10
   enemyTag: Enemy
