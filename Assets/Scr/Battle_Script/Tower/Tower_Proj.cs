@@ -1,57 +1,61 @@
 ﻿using UnityEngine;
-namespace fdbug
+
+public class Tower_Proj : MonoBehaviour
 {
-    public class Tower_Proj : MonoBehaviour
+    private Transform target;      // 子彈要追蹤的目標
+    private float damage;          // 由防禦塔傳承過來的傷害值
+
+    [Header("子彈動態設定")]
+    public float speed = 5f;       // 子彈飛行的速度
+    public float hitDistance = 0.1f; // 判定撞擊怪物的距離
+
+    // 🎯 提供給防禦塔呼叫的初始化方法
+    public void Setup(Transform _target, float _damage)
     {
-        [Header("移動設定")]
-        public float speed = 10f; // 飛行的速度
+        target = _target;
+        damage = _damage;
+    }
 
-        private Transform target;
-
-        // 路由：由防禦塔呼叫並傳入目標
-        public void Seek(Transform _target)
+    void Update()
+    {
+        // 🛑 防呆：如果飛到一半怪物已經先被別的塔打死了，子彈失去目標就自行自我摧毀
+        if (target == null)
         {
-            target = _target;
-        }
-
-        void Update()
-        {
-            // 如果目標在飛行途中已經不見了（例如被其他塔打死、走到終點消失）
-            if (target == null)
-            {
-                Destroy(gameObject); // 投射物自我摧毀
-                return;
-            }
-
-            // 計算朝向目標的方向與距離
-            Vector3 dir = target.position - transform.position;
-            float distanceThisFrame = speed * Time.deltaTime;
-
-            // 如果這一幀移動的距離大於等於跟目標的剩餘距離，代表撞擊到了
-            if (dir.magnitude <= distanceThisFrame)
-            {
-                HitTarget();
-                return;
-            }
-
-            // 正常移動
-            transform.Translate(dir.normalized * distanceThisFrame, Space.World);
-
-            // 讓投射物面向目標（可選，適合有方向性的子彈）
-            if (dir != Vector3.zero)
-            {
-                transform.rotation = Quaternion.LookRotation(dir);
-            }
-        }
-
-        void HitTarget()
-        {
-            // 暫時不填入傷害要素，撞到就直接銷毀投射物
-            Debug.Log("擊中敵人！");
-
-            // 後續可以在這裡生成爆炸特效 (Instantiate Particle Effect)
-
             Destroy(gameObject);
+            return;
         }
+
+        // 🚀 追蹤邏輯：計算往怪物移動的方向
+        Vector3 dir = target.position - transform.position;
+        float distanceThisFrame = speed * Time.deltaTime;
+
+        // 檢查這一格的移動距離是否已經足以撞到怪物
+        if (dir.magnitude <= distanceThisFrame || Vector3.Distance(transform.position, target.position) <= hitDistance)
+        {
+            HitTarget();
+            return;
+        }
+
+        // 朝目標前進並旋轉面向目標
+        transform.Translate(dir.normalized * distanceThisFrame, Space.World);
+        transform.LookAt(target);
+    }
+
+    // 💥 當子彈成功咬到怪物時觸發
+    void HitTarget()
+    {
+        if (target != null)
+        {
+            Enemy_Stats enemy = target.GetComponent<Enemy_Stats>();
+            if (enemy != null)
+            {
+                enemy.TakeDamage(damage); // 真正造成傷害的時間點改到這裡！
+            }
+        }
+
+        // 💡 未來可以在這裡實作：生成爆炸特效（Instantiate Particle）
+
+        // 銷毀子彈本身
+        Destroy(gameObject);
     }
 }

@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Audio;
 
 namespace fdbug
@@ -17,7 +17,7 @@ namespace fdbug
             if (instance == null) //如果Instance為空，表示還沒有Sound_Manager實例存在
             {
                 instance = this; //將當前的Sound_Manager實例賦值給Instance變數
-                DontDestroyOnLoad(gameObject); //設置當前的Sound_Manager物件在場景切換時不被銷毀，確保它在整個遊戲過程中持續存在
+                //DontDestroyOnLoad(gameObject); //設置當前的Sound_Manager物件在場景切換時不被銷毀，確保它在整個遊戲過程中持續存在
             }
             else
             {
