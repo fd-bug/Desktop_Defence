@@ -2,8 +2,21 @@
 
 public class Build_Manager : MonoBehaviour
 {
+    // 🎯 請檢查或在你的蓋塔管理器（如 Build_Manager.cs）中加入：
     public static Build_Manager instance;
+    public int currentTowerCount = 0; // 🎯 紀錄全場當前防禦塔總數
+    public int maxTowerLimit = 8;     // 🎯 最大限制 8 座
 
+    void Awake()
+    {
+        instance = this;
+    }
+
+    // 🎯 提供一個方法讓地格可以查詢是不是滿了
+    public bool CanBuildTower()
+    {
+        return currentTowerCount < maxTowerLimit;
+    }
     [Header("防禦塔 Prefab 清單")]
     public GameObject[] towerPrefabs; // 0: 原子筆塔, 1: 盆栽塔
 
@@ -12,18 +25,6 @@ public class Build_Manager : MonoBehaviour
 
     private int selectedTowerIndex = 0; // 當前 UI 所選取要蓋的塔編號 (0 或 1)
 
-
-    void Awake()
-    {
-        if (instance == null)
-        {
-            instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
 
     void Update()
     {

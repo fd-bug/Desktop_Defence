@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class Plant_Tower : MonoBehaviour
 {
@@ -44,23 +45,38 @@ public class Plant_Tower : MonoBehaviour
     {
         Debug.Log($"🌵 [{gameObject.name}] 釋放了群體藤蔓震擊！");
 
-        // 🎯 1. 【全新新增】在盆栽塔的腳底下生成震波特效
         if (shockwavePrefab != null)
         {
-            // 讓特效生成在盆栽的中心點，並保持預設的角度
             GameObject vfxInstance = Instantiate(shockwavePrefab, transform.position, Quaternion.identity);
-
-            // 🎯 2. 【全新新增】設定時間到自動摧毀特效物件，防止場上殘留垃圾物件導致遊戲變卡
             Destroy(vfxInstance, effectDestroyTime);
         }
 
-        // 2. 原本的群體傷害與緩速迴圈（維持不變）
+        // 🎯 1. 建立一個點名簿，用來記錄這一發爆炸已經炸過哪些怪物了
+        HashSet<Enemy_Stats> AddressedEnemies = new HashSet<Enemy_Stats>();
+
+        // 2. 抓取範圍內的所有碰撞體
         Collider[] colliders = Physics.OverlapSphere(transform.position, range, enemyLayer);
+
         foreach (Collider col in colliders)
         {
             Enemy_Stats enemy = col.GetComponent<Enemy_Stats>();
+
+            // 🎯 如果沒抓到，嘗試往父物件找（防範 Collider 掛在子模型上的情況）
+            if (enemy == null)
+            {
+                enemy = col.GetComponentInParent<Enemy_Stats>();
+            }
+
             if (enemy != null)
             {
+                // 🎯 3. 核心防禦：檢查這隻怪是不是已經受過傷了？
+                // Contains 如果回傳 true，代表點名簿裡有了，直接跳過這一個 Collider！
+                if (AddressedEnemies.Contains(enemy))
+                    continue;
+
+                // 🎯 4. 如果是第一次遇到這隻怪，加入點名簿，並給予傷害與緩速
+                AddressedEnemies.Add(enemy);
+
                 enemy.TakeDamage(damage);
                 enemy.ApplySlow(slowFactor, slowDuration);
             }

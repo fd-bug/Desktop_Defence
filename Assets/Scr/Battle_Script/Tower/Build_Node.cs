@@ -18,10 +18,25 @@ public class Build_Node : MonoBehaviour, IPointerClickHandler
 
     public void BuildTowerOnNode(GameObject towerPrefab)
     {
+        // 🎯 核心防禦：蓋塔前先問管理器，是不是已經達到 8 座上限了？
+        if (Build_Manager.instance != null && !Build_Manager.instance.CanBuildTower())
+        {
+            Debug.LogWarning("❌ 已達 8 座防禦塔上限！無法再建造新塔。");
+            return; // 🎯 直接攔截，下面生成塔的程式碼完全不會被執行！
+        }
+
+        // 原本的蓋塔邏輯
         instantiatedTower = Instantiate(towerPrefab, transform.position, Quaternion.identity);
         instantiatedTower.transform.SetParent(this.transform);
         isOccupied = true;
         upgradeCount = 0; // 新蓋好時，升級次數歸零
+
+        // 🎯 蓋塔成功，場上塔的計數器 +1
+        if (Build_Manager.instance != null)
+        {
+            Build_Manager.instance.currentTowerCount++;
+            Debug.Log($"🏗️ 成功建造防禦塔！當前場上總數：{Build_Manager.instance.currentTowerCount} / 8");
+        }
     }
 
     // 🖱️ 當地格被滑鼠點擊時
